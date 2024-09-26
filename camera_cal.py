@@ -11,6 +11,7 @@ criteria = (cv.TERM_CRITERIA_EPS + cv.TERM_CRITERIA_MAX_ITER, 30, 0.001)
 # prepare object points, like (0,0,0), (1,0,0), (2,0,0) ....,(6,5,0)
 objp = np.zeros((chessboard[0] * chessboard[1], 3), np.float32)
 objp[:,:2] = np.mgrid[0:chessboard[0], 0:chessboard[1]].T.reshape(-1,2)
+
  
 # Arrays to store object points and image points from all the images.
 objpoints = [] # 3d point in real world space
@@ -36,7 +37,7 @@ for i, fname in enumerate(images):
         imgpoints.append(corners2)
  
         # Draw and display the corners
-        cv.drawChessboardCorners(img, (7,6), corners2, ret)
+        cv.drawChessboardCorners(img, chessboard, corners2, ret)
         cv.imshow('img', img)
 
         # Save images
@@ -82,7 +83,7 @@ ret, mtx, dist, rvecs, tvecs = cv.calibrateCamera(objpoints, imgpoints, gray.sha
 
 
 # Save intrinsic parameters
-np.savez('output/parameters/intrinsic_params.npz', cameraMatrix=mtx, dist=dist)
+np.savez('output/parameters/intrinsic_params.npz', mtx=mtx, dist=dist)
 
 # Estimate and save extrinsic parameters for each image
 for i in range(len(images)):
